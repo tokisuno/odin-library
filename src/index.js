@@ -14,7 +14,7 @@ function Library () {
 
   this.drawTitle = () => {
     const titleDiv = document.createElement("h1");
-    titleDiv.textContent = "Library!"
+    titleDiv.textContent = "Barebones Library!"
     document.querySelector("div#content").appendChild(titleDiv);
   }
 
@@ -38,29 +38,41 @@ function Library () {
 
       const bookDiv = document.createElement("div");
       bookDiv.setAttribute("id", "book");
+      bookDiv.setAttribute("class", book.id);
 
       const bookTitle = document.createElement("div");
       const bookAuthor = document.createElement("div");
       const bookPages = document.createElement("div");
       const bookRead = document.createElement("button");
+      const bookRemove = document.createElement("button");
+      bookRemove.setAttribute("id", "removeBtn");
 
       bookRead.addEventListener("click", () => {
         book.toggleReadStatus();
         book.setReadText();
         bookRead.textContent = book.readText;
         console.log(book.read);
-      })
+      });
+
+      bookRemove.addEventListener("click", (e) => {
+        console.log('here');
+        this.library = this.library.filter(item => item !== book);
+        console.log(e.target.parentNode)
+        e.target.parentNode.innerHTML = '';
+        console.log(this.library);
+      });
 
       bookTitle.textContent = book.title;
       bookAuthor.textContent = book.author;
       bookPages.textContent = book.pages;
       bookRead.textContent = book.readText;
-      // book.read === true ? bookRead.textContent = "read" : bookRead.textContent = "unread";
+      bookRemove.textContent = "Remove";
 
       bookDiv.appendChild(bookTitle);
       bookDiv.appendChild(bookAuthor);
       bookDiv.appendChild(bookPages);
       bookDiv.appendChild(bookRead);
+      bookDiv.appendChild(bookRemove);
 
       booksDiv.appendChild(bookDiv);
       contentDiv.appendChild(booksDiv);
@@ -102,8 +114,6 @@ library.addBook(theHobbit);
 library.addBook(atomicHabits);
 // Adding Example Books
 
-// console.log(library);
-
 library.drawLibrary();
 
 // Form requests
@@ -123,6 +133,9 @@ confirmButton.addEventListener("click", (e) => {
   console.log(title.value);
 
   library.addBook(new Book(title.value, author.value, pages.value))
+  title.value = ''
+  author.value = ''
+  pages.value = ''
   library.drawLibrary();
   e.preventDefault();
   dialog.close();
