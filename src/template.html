@@ -7,6 +7,35 @@
     <!-- <link href="css/style.css" rel="stylesheet"> -->
   </head>
   <body>
+    <dialog id="dialog">
+      <form method="dialog">
+        <p>
+	<label>
+          Title:
+          <input id="titleBox" type="text" required />
+        </label>
+        </p>
+        <p>
+        <label>
+          Author:
+          <input id="authorBox" type="text" required />
+        </label>
+        </p>
+        <p>
+        <label>
+          Page count:
+          <input id="pageBox" type="text" required />
+        </label>
+        </p>
+        <div>
+          <button id="confirmBtn" value="default">Confirm</button>
+        </div>
+      </form>
+    </dialog>
+    <p>
+      <button id="show-dialog">Show the dialog</button>
+    </p>
+
     <div id="content"></div>
   </body>
 </html>

@@ -21,6 +21,7 @@ function Library () {
 
   this.drawLibrary = () => {
     const contentDiv = document.querySelector("div#content");
+    contentDiv.innerHTML = ''
 
     this.drawTitle();
     this.drawBooks();
@@ -34,7 +35,6 @@ function Library () {
     this.library.forEach((book) => {
       const contentDiv = document.querySelector("div#content");
       booksDiv.setAttribute("id", "books");
-      // const contentDiv = document.querySelector("div#books");
 
       const bookDiv = document.createElement("div");
       bookDiv.setAttribute("id", "book");
@@ -42,21 +42,25 @@ function Library () {
       const bookTitle = document.createElement("div");
       const bookAuthor = document.createElement("div");
       const bookPages = document.createElement("div");
+      const bookRead = document.createElement("button");
 
-      const titleLabel = document.createElement("div");
-      const authorLabel = document.createElement("div");
-      const pagesLabel = document.createElement("div");
+      bookRead.addEventListener("click", () => {
+        book.toggleReadStatus();
+        book.setReadText();
+        bookRead.textContent = book.readText;
+        console.log(book.read);
+      })
 
-      // bookTitle.textContent = `Title: ${book.title}`;
-      // bookAuthor.textContent = `Author: ${book.author}`;
-      // bookPages.textContent = `Pages: ${book.pages}`;
       bookTitle.textContent = book.title;
       bookAuthor.textContent = book.author;
       bookPages.textContent = book.pages;
+      bookRead.textContent = book.readText;
+      // book.read === true ? bookRead.textContent = "read" : bookRead.textContent = "unread";
 
       bookDiv.appendChild(bookTitle);
       bookDiv.appendChild(bookAuthor);
       bookDiv.appendChild(bookPages);
+      bookDiv.appendChild(bookRead);
 
       booksDiv.appendChild(bookDiv);
       contentDiv.appendChild(booksDiv);
@@ -68,11 +72,23 @@ function Book (title, author, pages) {
   this.title = title;
   this.author = author;
   this.pages = pages;
+  this.read = false;
+  this.readText = this.read === true ? "read" : "unread";
   this.id = crypto.randomUUID();
 
   this.info = () => {
     return `${this.title} by ${this.author} (${this.pages} pages.)`;
   };
+
+  this.toggleReadStatus = () => {
+    this.read = !this.read;
+    this.setReadText();
+    console.log(this.readText);
+  }
+
+  this.setReadText = () => {
+    this.read === true ? this.readText = "read" : this.readText = "unread";
+  }
 }
 
 // Example Books
@@ -89,3 +105,25 @@ library.addBook(atomicHabits);
 // console.log(library);
 
 library.drawLibrary();
+
+// Form requests
+const showButton = document.querySelector("button#show-dialog");
+const dialog = document.querySelector("dialog#dialog");
+const closeButton = document.querySelector("button#cancelBtn");
+const confirmButton = document.querySelector("button#confirmBtn");
+
+showButton.addEventListener("click", () => {
+  dialog.showModal();
+});
+
+confirmButton.addEventListener("click", (e) => {
+  const title = document.querySelector("input#titleBox");
+  const author = document.querySelector("input#authorBox");
+  const pages = document.querySelector("input#pageBox");
+  console.log(title.value);
+
+  library.addBook(new Book(title.value, author.value, pages.value))
+  library.drawLibrary();
+  e.preventDefault();
+  dialog.close();
+});
